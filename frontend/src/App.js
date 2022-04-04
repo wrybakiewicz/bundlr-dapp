@@ -1,9 +1,9 @@
-function App() {
+import UploadImage from "./UploadImage";
+
+export default function App() {
     return (
         <div>
-            Hello world
+            <UploadImage />
         </div>
     );
 }
-
-export default App;
