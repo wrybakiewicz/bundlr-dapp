@@ -6,3 +6,12 @@ fstart:
 
 fbuild:
 	$(MAKE) -C frontend build
+
+binstall:
+	$(MAKE) -C blockchain install
+
+bcompile:
+	$(MAKE) -C blockchain compile
+
+btest:
+	$(MAKE) -C blockchain test
