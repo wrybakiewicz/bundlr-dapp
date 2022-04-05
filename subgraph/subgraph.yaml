@@ -24,6 +24,6 @@ dataSources:
           handler: handleVoteUp
         - event: VoteDown(indexed address,indexed uint256)
           handler: handleVoteDown
-        - event: Transfer(address, address, uint256)
+        - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleMint
       file: ./src/mapping.ts
