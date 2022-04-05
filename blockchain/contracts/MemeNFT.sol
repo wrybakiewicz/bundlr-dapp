@@ -7,8 +7,14 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract MemeNFT is ERC721URIStorage {
 
+    enum Vote{NO_VOTE, UP, DOWN}
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+    mapping(address => mapping(uint => Vote)) addressTokenIdVotes;
+
+    event VoteUp(address voter, uint tokenId);
+    event VoteDown(address voter, uint tokenId);
 
     constructor() ERC721("MemeNFT", "MNFT") {}
 
@@ -20,5 +26,18 @@ contract MemeNFT is ERC721URIStorage {
         return newItemId;
     }
 
-    //TODO: voting
+    function voteUp(uint _tokenId) public {
+        addressTokenIdVotes[msg.sender][_tokenId] = Vote.UP;
+        emit VoteUp(msg.sender, _tokenId);
+    }
+
+    function voteDown(uint _tokenId) public {
+        addressTokenIdVotes[msg.sender][_tokenId] = Vote.DOWN;
+        emit VoteDown(msg.sender, _tokenId);
+    }
+
+    function getAddressTokenIdVote(address _voter, uint _tokenId) public view returns (Vote) {
+        return addressTokenIdVotes[_voter][_tokenId];
+    }
+
 }

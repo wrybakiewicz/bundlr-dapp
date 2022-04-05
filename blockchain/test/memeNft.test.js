@@ -28,4 +28,71 @@ describe("MemeNFT", function () {
     expect(await memeNFT.balanceOf(address2.address)).to.equal(0);
   });
 
+  it("should mint token & return NO_VOTED", async function () {
+    const [owner] = await ethers.getSigners();
+    const MemeNFT = await ethers.getContractFactory("MemeNFT");
+    const memeNFT = await MemeNFT.deploy();
+    await memeNFT.deployed();
+    const url1 = "some1.url"
+
+    await memeNFT.mint(url1)
+
+    expect(await memeNFT.getAddressTokenIdVote(owner.address, 1)).to.equal(0)
+  });
+
+  it("should upvote", async function () {
+    const [owner] = await ethers.getSigners();
+    const MemeNFT = await ethers.getContractFactory("MemeNFT");
+    const memeNFT = await MemeNFT.deploy();
+    await memeNFT.deployed();
+    const url1 = "some1.url"
+    await memeNFT.mint(url1)
+
+    await memeNFT.voteUp(1)
+
+    expect(await memeNFT.getAddressTokenIdVote(owner.address, 1)).to.equal(1)
+  });
+
+  it("should downvote", async function () {
+    const [owner] = await ethers.getSigners();
+    const MemeNFT = await ethers.getContractFactory("MemeNFT");
+    const memeNFT = await MemeNFT.deploy();
+    await memeNFT.deployed();
+    const url1 = "some1.url"
+    await memeNFT.mint(url1)
+
+    await memeNFT.voteDown(1)
+
+    expect(await memeNFT.getAddressTokenIdVote(owner.address, 1)).to.equal(2)
+  });
+
+  it("should upvote & downvote", async function () {
+    const [owner, address1] = await ethers.getSigners();
+    const MemeNFT = await ethers.getContractFactory("MemeNFT");
+    const memeNFT = await MemeNFT.deploy();
+    await memeNFT.deployed();
+    const url1 = "some1.url"
+    const url2 = "some2.url"
+    const url3 = "some3.url"
+    await memeNFT.mint(url1)
+    await memeNFT.mint(url2)
+    await memeNFT.mint(url3)
+
+    await memeNFT.voteDown(1)
+    await memeNFT.connect(address1).voteDown(1)
+    await memeNFT.voteUp(2)
+    await memeNFT.connect(address1).voteUp(2)
+    await memeNFT.voteUp(3)
+    await memeNFT.connect(address1).voteUp(3)
+    await memeNFT.voteDown(3)
+
+
+    expect(await memeNFT.getAddressTokenIdVote(owner.address, 1)).to.equal(2)
+    expect(await memeNFT.getAddressTokenIdVote(owner.address, 2)).to.equal(1)
+    expect(await memeNFT.getAddressTokenIdVote(owner.address, 3)).to.equal(2)
+    expect(await memeNFT.getAddressTokenIdVote(address1.address, 1)).to.equal(2)
+    expect(await memeNFT.getAddressTokenIdVote(address1.address, 2)).to.equal(1)
+    expect(await memeNFT.getAddressTokenIdVote(address1.address, 3)).to.equal(1)
+  });
+
 });
