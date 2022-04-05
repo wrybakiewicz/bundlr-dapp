@@ -18,4 +18,9 @@ module.exports = {
       default: 0,
     },
   },
+  networks: {
+    localhost: {
+      accounts: [process.env.PRIVATE_KEY]
+    },
+  },
 };

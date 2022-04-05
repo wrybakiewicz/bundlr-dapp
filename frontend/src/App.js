@@ -3,6 +3,7 @@ import {ethers} from "ethers";
 import MemeNFTArtifact from "./contracts/MemeNFT.json";
 import contractAddress from "./contracts/contract-address.json";
 import {useEffect, useState} from "react";
+import ViewImages from "./ViewImages";
 
 export default function App() {
     const [memeNFT, setMemeNFT] = useState();
@@ -29,6 +30,7 @@ export default function App() {
         return (
             <div>
                 <UploadImage provider={provider} memeNFT={memeNFT}/>
+                <ViewImages memeNFT={memeNFT} />
             </div>
         );
     } else {
