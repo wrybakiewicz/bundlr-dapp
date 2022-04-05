@@ -14,8 +14,9 @@ export default function UploadImage() {
         await window.ethereum.enable()
         const provider = new providers.Web3Provider(window.ethereum);
         await provider._ready()
-        const bundlr = new WebBundlr("https://devnet.bundlr.network", "boba", provider, {providerUrl: "https://rinkeby.boba.network/"});
+        const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider);
         await bundlr.ready();
+        // bundlr.currencyConfig.isSlow = true
         setBundlr(bundlr);
         return bundlr;
     }

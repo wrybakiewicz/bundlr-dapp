@@ -9,5 +9,8 @@ test:
 node:
 	npx hardhat node --no-deploy
 
+deploy_local:
+	npx hardhat deploy --network localhost
+
 install:
 	npm install

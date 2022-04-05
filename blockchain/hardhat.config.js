@@ -1,5 +1,21 @@
 require("@nomiclabs/hardhat-waffle");
+require('hardhat-deploy');
+require("dotenv").config()
 
 module.exports = {
-  solidity: "0.8.4",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.9",
+      }
+    ],
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+    feeCollector: {
+      default: 0,
+    },
+  },
 };
