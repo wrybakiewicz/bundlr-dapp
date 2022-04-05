@@ -1,8 +1,9 @@
-import {providers} from "ethers"
 import {WebBundlr} from "@bundlr-network/client";
 import {useEffect, useState} from "react";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function UploadImage() {
+export default function UploadImage({provider, memeNFT}) {
     const [bundlr, setBundlr] = useState();
     const [balance, setBalance] = useState();
     const [image, setImage] = useState();
@@ -11,9 +12,6 @@ export default function UploadImage() {
     const [uploaded, setUploaded] = useState(false);
 
     const initialiseBundlr = async () => {
-        await window.ethereum.enable()
-        const provider = new providers.Web3Provider(window.ethereum);
-        await provider._ready()
         const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider);
         await bundlr.ready();
         // bundlr.currencyConfig.isSlow = true
@@ -56,7 +54,14 @@ export default function UploadImage() {
         console.log("UPLOADED");
         console.log(result)
         console.log(result.data.id)
-        setUploaded(true);
+        const mintPromise = memeNFT.mint(result.data.id)
+            .then(tx => tx.wait())
+        toast.promise(mintPromise, {
+            pending: 'Mint transaction in progress',
+            success: 'Mint transaction succeed 👌',
+            error: 'Mint transaction failed 🤯'
+        });
+        mintPromise.then(_ => setUploaded(true))
     }
 
     const onImageChange = async event => {
@@ -95,7 +100,7 @@ export default function UploadImage() {
                     <img src={image}/>
                 </div> : <div></div>}
         </div>
-    } else if(uploaded) {
+    } else if (uploaded) {
         return <div>Image uploaded</div>
     } else {
         return <div>Initializing ...</div>
