@@ -15,6 +15,7 @@ dataSources:
       entities:
         - VoteUp
         - VoteDown
+        - Transfer
       abis:
         - name: MemeNFT
           file: ./abis/MemeNFT.json
@@ -23,4 +24,6 @@ dataSources:
           handler: handleVoteUp
         - event: VoteDown(indexed address,indexed uint256)
           handler: handleVoteDown
+        - event: Transfer(address, address, uint256)
+          handler: handleMint
       file: ./src/mapping.ts
