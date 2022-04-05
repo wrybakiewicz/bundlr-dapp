@@ -13,8 +13,8 @@ contract MemeNFT is ERC721URIStorage {
     Counters.Counter private _tokenIds;
     mapping(address => mapping(uint => Vote)) addressTokenIdVotes;
 
-    event VoteUp(address voter, uint tokenId);
-    event VoteDown(address voter, uint tokenId);
+    event VoteUp(address indexed voter, uint indexed tokenId);
+    event VoteDown(address indexed voter, uint indexed tokenId);
 
     constructor() ERC721("MemeNFT", "MNFT") {}
 

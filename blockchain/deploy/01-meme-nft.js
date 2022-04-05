@@ -14,6 +14,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     saveFrontendFiles(memeNFT.address)
 }
 
+//TODO: use --export-all
 function saveFrontendFiles(memeNFTAddress) {
     const contractsDir = __dirname + "/../../frontend/src/contracts";
 
