@@ -14,7 +14,7 @@ export default function UploadImage() {
         await window.ethereum.enable()
         const provider = new providers.Web3Provider(window.ethereum);
         await provider._ready()
-        const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider);
+        const bundlr = new WebBundlr("https://devnet.bundlr.network", "boba", provider, {providerUrl: "https://rinkeby.boba.network/"});
         await bundlr.ready();
         setBundlr(bundlr);
         return bundlr;
@@ -76,7 +76,7 @@ export default function UploadImage() {
     })
 
 
-    if (balance && bundlr && !uploaded) {
+    if (balance !== undefined && bundlr && !uploaded) {
         return <div>
             <div>Upload image:
                 <input type="file" id="image" name="img" accept="image/*" onChange={onImageChange}/>

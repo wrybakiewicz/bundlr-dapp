@@ -19,4 +19,6 @@ contract MemeNFT is ERC721URIStorage {
         _setTokenURI(newItemId, tokenURI);
         return newItemId;
     }
+
+    //TODO: voting
 }
