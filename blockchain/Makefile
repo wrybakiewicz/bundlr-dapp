@@ -14,3 +14,6 @@ deploy_local:
 
 install:
 	npm install
+
+deploy_matic:
+	npx hardhat deploy --network matic
