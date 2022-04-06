@@ -27,8 +27,9 @@ export function handleVoteDown(event: VoteDown): void {
 }
 
 export function handleMint(event: Transfer): void {
-    if (event.params.from === Address.zero()) {
-        const entity = new MemeEntity(event.params.tokenId.toHex())
+    let entity = MemeEntity.load(event.params.tokenId.toHex())
+    if (!entity) {
+        entity = new MemeEntity(event.params.tokenId.toHex())
         entity.voteCount = BigInt.fromI32(0)
         entity.save()
     }

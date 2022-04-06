@@ -11,7 +11,7 @@ describe("MemeNFT", function () {
     const url2 = "some2.url"
     const url3 = "some3.url"
 
-    await memeNFT.mint(url1)
+    const mintTx1 = await memeNFT.mint(url1)
     await memeNFT.mint(url2)
     await memeNFT.connect(address1).mint(url3)
 
@@ -26,6 +26,8 @@ describe("MemeNFT", function () {
     expect(await memeNFT.balanceOf(owner.address)).to.equal(2);
     expect(await memeNFT.balanceOf(address1.address)).to.equal(1);
     expect(await memeNFT.balanceOf(address2.address)).to.equal(0);
+    await expect(mintTx1).to.emit(memeNFT, "Transfer")
+        .withArgs('0x0000000000000000000000000000000000000000', owner.address, 1);
   });
 
   it("should mint token & return NO_VOTED", async function () {
