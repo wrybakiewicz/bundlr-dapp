@@ -29,8 +29,10 @@ export default function ViewImage({meme, memeNFT}) {
     }
 
     return <div>
-        <img alt={""} src={`https://arweave.net/` + "vduXOBwDGbopIBPJuL1tA86Id1NcLBvPR-qUqO5T18g"}
-             onLoad={() => setHide(false)}/>
+        <img alt={""} src={`https://arweave.net/${meme.link}`}
+             onLoad={() => setHide(false)}
+            style={{maxWidth: '1000px', maxHeight: '800px'}}
+        />
         <div hidden={hide}>Votes: {voteCount}
             <div>ID: {meme.id}</div>
             <button onClick={upVote}>+</button>

@@ -17,6 +17,7 @@ export default function ViewImages({memeNFT}) {
                             memeEntities(first: 100, orderBy: voteCount, orderDirection: desc) {
                               id
                               voteCount
+                              link
                              }
                             }`
             })
