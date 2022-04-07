@@ -1,13 +1,12 @@
 import {ApolloClient, gql, InMemoryCache} from "@apollo/client";
 import {useEffect, useState} from "react";
+import ViewImage from "./ViewImage";
 
-export default function ViewImages() {
+export default function ViewImages({memeNFT}) {
     const client = new ApolloClient({
         uri: 'https://api.thegraph.com/subgraphs/name/wrybakiewicz/memenft',
         cache: new InMemoryCache()
     });
-
-    const axios = require('axios');
 
     const [memes, setMemes] = useState();
 
@@ -15,7 +14,7 @@ export default function ViewImages() {
         client
             .query({
                 query: gql`{
-                            memeEntities(first: 5) {
+                            memeEntities(first: 100, orderBy: voteCount, orderDirection: desc) {
                               id
                               voteCount
                              }
@@ -30,14 +29,10 @@ export default function ViewImages() {
         }
     })
 
+
     if (memes) {
-        console.log(memes)
         return <div>
-            {memes.map(meme => <div key={meme.id}>
-                <img alt={""} src={`https://arweave.net/` + "vduXOBwDGbopIBPJuL1tA86Id1NcLBvPR-qUqO5T18g"}/>
-                <div>Votes: {meme.voteCount}
-                </div>
-            </div>)}
+            {memes.map(meme => <ViewImage meme={meme} key={meme.id} memeNFT={memeNFT}/>)}
         </div>
     } else {
         return <div>Loading memes ...</div>
