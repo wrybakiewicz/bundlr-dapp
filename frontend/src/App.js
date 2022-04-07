@@ -1,39 +1,26 @@
-import UploadImage from "./UploadImage";
-import {ethers} from "ethers";
-import MemeNFTArtifact from "./contracts/MemeNFT.json";
-import contractAddress from "./contracts/contract-address.json";
-import {useEffect, useState} from "react";
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import ViewImages from "./ViewImages";
+import UploadImage from "./UploadImage";
 
 export default function App() {
-    const [memeNFT, setMemeNFT] = useState();
-    const [provider, setProvider] = useState();
-
-    const initializeEthers = () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const memeNFTContract = new ethers.Contract(
-            contractAddress.MemeNFT,
-            MemeNFTArtifact.abi,
-            provider.getSigner(0)
-        );
-        setMemeNFT(memeNFTContract)
-        setProvider(provider)
-    }
-
-    useEffect(() => {
-        if (!memeNFT) {
-            initializeEthers();
-        }
-    })
-
-    if (provider && memeNFT) {
-        return (
-            <div>
-                <UploadImage provider={provider} memeNFT={memeNFT}/>
-                <ViewImages memeNFT={memeNFT} />
+    return <BrowserRouter>
+        <div className="container p-4">
+            <div className="row">
+                <div className="col-12">
+                    <ul className="nav nav-tabs justify-content-center">
+                        <li className="nav-item">
+                            <Link to={"/"} className={"nav-link active"}>View</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to={"/mint"} className={"nav-link"}>Mint</Link>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        );
-    } else {
-        return <div>Initializing...</div>
-    }
+            <Routes>
+                <Route path="/" element={<ViewImages/>}/>
+                <Route path="/mint" element={<UploadImage/>}/>
+            </Routes>
+        </div>
+    </BrowserRouter>
 }

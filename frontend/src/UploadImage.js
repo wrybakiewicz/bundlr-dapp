@@ -1,17 +1,31 @@
 import {WebBundlr} from "@bundlr-network/client";
 import {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {ethers} from "ethers";
+import contractAddress from "./contracts/contract-address.json";
+import MemeNFTArtifact from "./contracts/MemeNFT.json";
 
-export default function UploadImage({provider, memeNFT}) {
-    const [bundlr, setBundlr] = useState();
+export default function UploadImage() {
     const [balance, setBalance] = useState();
     const [image, setImage] = useState();
     const [imageData, setImageData] = useState();
     const [cost, setCost] = useState();
     const [uploaded, setUploaded] = useState(false);
+    const [memeNFT, setMemeNFT] = useState();
+    const [bundlr, setBundlr] = useState();
 
-    const initialiseBundlr = async () => {
+    const initializeEthers = () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const memeNFTContract = new ethers.Contract(
+            contractAddress.MemeNFT,
+            MemeNFTArtifact.abi,
+            provider.getSigner(0)
+        );
+        setMemeNFT(memeNFTContract)
+        return provider
+    }
+
+    const initialiseBundlr = async (provider) => {
         const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider);
         await bundlr.ready();
         setBundlr(bundlr);
@@ -75,8 +89,9 @@ export default function UploadImage({provider, memeNFT}) {
     };
 
     useEffect(() => {
-        if (!bundlr) {
-            initialiseBundlr().then(bundlr => getBalance(bundlr));
+        if (!memeNFT) {
+            const provider = initializeEthers();
+            initialiseBundlr(provider).then(bundlr => getBalance(bundlr));
         }
     })
 

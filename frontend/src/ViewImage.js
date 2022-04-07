@@ -1,5 +1,4 @@
 import {toast} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
 
 export default function ViewImage({meme, memeNFT}) {
