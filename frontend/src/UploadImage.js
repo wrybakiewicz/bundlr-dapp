@@ -14,7 +14,6 @@ export default function UploadImage({provider, memeNFT}) {
     const initialiseBundlr = async () => {
         const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider);
         await bundlr.ready();
-        // bundlr.currencyConfig.isSlow = true
         setBundlr(bundlr);
         return bundlr;
     }
@@ -64,12 +63,6 @@ export default function UploadImage({provider, memeNFT}) {
         mintPromise.then(_ => setUploaded(true))
     }
 
-    const test = async () => {
-        memeNFT.mint("vduXOBwDGbopIBPJuL1tA86Id1NcLBvPR-qUqO5T18g")
-        memeNFT.mint("fDMQQyN9TZtG4lSbN5BgNPmNGvXwW3e0_7C-F20UKqc")
-        memeNFT.mint("i8ZVnXnh1wYV687LBLVh16Rbtedg1e5fr1ADHuCe9DY")
-    }
-
     const onImageChange = async event => {
         if (event.target.files && event.target.files[0]) {
             const img = event.target.files[0];
@@ -103,11 +96,8 @@ export default function UploadImage({provider, memeNFT}) {
             {image ?
                 <div>
                     Upladed image:
-                    <img src={image}/>
+                    <img alt={""} src={image}/>
                 </div> : <div></div>}
-            <div>Add test img:
-            <button onClick={test}>Add</button>
-            </div>
         </div>
     } else if (uploaded) {
         return <div>Image uploaded</div>
