@@ -14,15 +14,20 @@ export default function ViewImages() {
     const [memeNFT, setMemeNFT] = useState();
     const [memes, setMemes] = useState();
 
-    const initializeEthers = () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const initializeEthers = async () => {
+        // https://lightning-replica.boba.network
+        const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
         const memeNFTContract = new ethers.Contract(
             contractAddress.MemeNFT,
             MemeNFTArtifact.abi,
             provider.getSigner(0)
         );
         setMemeNFT(memeNFTContract)
-        return provider
+        return memeNFTContract
+    }
+
+    const initializeWallet = () => {
+        window.ethereum.request({method: 'eth_requestAccounts'});
     }
 
     const query = () => {
@@ -40,16 +45,18 @@ export default function ViewImages() {
     }
 
     useEffect(() => {
+        if(!memeNFT && window.ethereum) {
+            initializeWallet()
+            initializeEthers()
+        }
         if (!memes) {
             query();
         }
-        if(!memeNFT) {
-            initializeEthers();
-        }
     })
 
-
-    if (memes && memeNFT) {
+    if (window.ethereum === undefined) {
+        return <h2>Install ethereum wallet</h2>;
+    } else if (memes && memeNFT) {
         return <div>
             {memes.map(meme => <ViewImage meme={meme} key={meme.id} memeNFT={memeNFT}/>)}
         </div>

@@ -9,6 +9,10 @@ export default function ViewImage({meme, memeNFT}) {
         const upVote = memeNFT.voteUp(meme.id)
             .then(tx => tx.wait())
             .then(_ => setVoteCount(parseInt(voteCount) + 1))
+            .catch(error => {
+                console.error(error)
+                throw error;
+            })
         toast.promise(upVote, {
             pending: 'Up vote transaction in progress',
             success: 'Up vote transaction succeed 👌',
@@ -20,6 +24,10 @@ export default function ViewImage({meme, memeNFT}) {
         const downVotePromise = memeNFT.voteDown(meme.id)
             .then(tx => tx.wait())
             .then(_ => setVoteCount(parseInt(voteCount) - 1))
+            .catch(error => {
+                console.error(error)
+                throw error;
+            })
         toast.promise(downVotePromise, {
             pending: 'Down vote transaction in progress',
             success: 'Down vote transaction succeed 👌',
