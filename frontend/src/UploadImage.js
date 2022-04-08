@@ -15,7 +15,8 @@ export default function UploadImage() {
     const [bundlr, setBundlr] = useState();
 
     const initializeEthers = () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // https://lightning-replica.boba.network
+        const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
         const memeNFTContract = new ethers.Contract(
             contractAddress.MemeNFT,
             MemeNFTArtifact.abi,
@@ -32,41 +33,31 @@ export default function UploadImage() {
         return bundlr;
     }
 
-    const getBalance = async (bundlr) => {
+    const updateBalance = async (bundlr) => {
         const balance = await bundlr.getLoadedBalance();
         setBalance(balance.toNumber());
     }
 
     const fund = async () => {
-        console.log("Funding")
         const tx = bundlr.createTransaction(imageData)
         const size = tx.size
         const cost = await bundlr.getPrice(size)
-        console.log(cost.toNumber())
         const fundStatus = await bundlr.fund(cost)
-        console.log("Funded");
         console.log(fundStatus)
-        getBalance(bundlr)
+        updateBalance(bundlr)
     }
 
     const updateCost = async (imageData) => {
-        console.log("Upadting cost")
         const tx = bundlr.createTransaction(imageData)
         const size = tx.size
         const cost = await bundlr.getPrice(size)
         setCost(cost.toNumber())
-        console.log(cost.toNumber())
-        console.log(balance);
     }
 
     const upload = async () => {
-        console.log("UPLOADING");
         const tx = bundlr.createTransaction(imageData)
         await tx.sign();
         const result = await tx.upload()
-        console.log("UPLOADED");
-        console.log(result)
-        console.log(result.data.id)
         const mintPromise = memeNFT.mint(result.data.id)
             .then(tx => tx.wait())
         toast.promise(mintPromise, {
@@ -91,7 +82,7 @@ export default function UploadImage() {
     useEffect(() => {
         if (!memeNFT) {
             const provider = initializeEthers();
-            initialiseBundlr(provider).then(bundlr => getBalance(bundlr));
+            initialiseBundlr(provider).then(bundlr => updateBalance(bundlr));
         }
     })
 
