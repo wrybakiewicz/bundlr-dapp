@@ -15,8 +15,7 @@ export default function UploadImage() {
     const [bundlr, setBundlr] = useState();
 
     const initializeEthers = () => {
-        // https://lightning-replica.boba.network
-        const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const memeNFTContract = new ethers.Contract(
             contractAddress.MemeNFT,
             MemeNFTArtifact.abi,
@@ -24,6 +23,11 @@ export default function UploadImage() {
         );
         setMemeNFT(memeNFTContract)
         return provider
+    }
+
+    const initializeWallet = () => {
+        console.log("Initializing wallet")
+        return window.ethereum.request({method: 'eth_requestAccounts'});
     }
 
     const initialiseBundlr = async (provider) => {
@@ -81,13 +85,17 @@ export default function UploadImage() {
 
     useEffect(() => {
         if (!memeNFT) {
-            const provider = initializeEthers();
-            initialiseBundlr(provider).then(bundlr => updateBalance(bundlr));
+            initializeWallet().then(_ => {
+                const provider = initializeEthers();
+                initialiseBundlr(provider).then(bundlr => updateBalance(bundlr));
+            })
         }
     })
 
 
-    if (balance !== undefined && bundlr && !uploaded) {
+    if (window.ethereum === undefined) {
+        return <h2>Install ethereum wallet</h2>;
+    } else if (balance !== undefined && bundlr && !uploaded && memeNFT) {
         return <div>
             <div>Upload image:
                 <input type="file" id="image" name="img" accept="image/*" onChange={onImageChange}/>
