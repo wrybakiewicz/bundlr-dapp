@@ -15,8 +15,7 @@ export default function ViewImages() {
     const [memes, setMemes] = useState();
 
     const initializeEthers = async () => {
-        // https://lightning-replica.boba.network
-        const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const memeNFTContract = new ethers.Contract(
             contractAddress.MemeNFT,
             MemeNFTArtifact.abi,
