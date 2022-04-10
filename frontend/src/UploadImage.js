@@ -13,6 +13,7 @@ export default function UploadImage() {
     const [uploaded, setUploaded] = useState(false);
     const [memeNFT, setMemeNFT] = useState();
     const [bundlr, setBundlr] = useState();
+    const [tx, setTx] = useState();
 
     const initializeEthers = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -38,12 +39,22 @@ export default function UploadImage() {
     }
 
     const updateBalance = async (bundlr) => {
-        const balance = await bundlr.getLoadedBalance();
-        setBalance(balance.toNumber());
+        const execute = (n) => {
+            setTimeout(async () => {
+                const balance = await bundlr.getLoadedBalance();
+                setBalance(balance.toNumber());
+                if (n < 5) {
+                    return execute(n + 1)
+                }
+            }, 1000 * n);
+        }
+
+        execute(0)
     }
 
     const fund = async () => {
         const tx = bundlr.createTransaction(imageData)
+        setTx(tx);
         const size = tx.size
         const cost = await bundlr.getPrice(size)
         const fundStatus = await bundlr.fund(cost)
@@ -59,9 +70,14 @@ export default function UploadImage() {
     }
 
     const upload = async () => {
-        const tx = bundlr.createTransaction(imageData)
-        await tx.sign();
-        const result = await tx.upload()
+        let transaction;
+        if(transaction) {
+            transaction = tx;
+        } else {
+            transaction = bundlr.createTransaction(imageData);
+        }
+        await transaction.sign();
+        const result = await transaction.upload();
         const mintPromise = memeNFT.mint(result.data.id)
             .then(tx => tx.wait())
         toast.promise(mintPromise, {
