@@ -6,7 +6,7 @@ dataSources:
     name: MemeNFT
     network: matic
     source:
-      address: "0x7FB46F531982F11a56709064b2B18CBc31B1c34F"
+      address: "0xB42b53FC8c565212830E9B69c4f7c9c5A4DFF813"
       abi: MemeNFT
     mapping:
       kind: ethereum/events
