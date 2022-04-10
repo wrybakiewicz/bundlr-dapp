@@ -8,8 +8,8 @@ export default function App() {
         <div className="container p-4">
             <Menu/>
             <Routes>
-                <Route path="/" element={<ViewImages/>}/>
                 <Route path="/mint" element={<UploadImage/>}/>
+                <Route path="*" element={<ViewImages/>}/>
             </Routes>
         </div>
     </BrowserRouter>
