@@ -28,6 +28,7 @@ describe("MemeNFT", function () {
     expect(await memeNFT.balanceOf(address2.address)).to.equal(0);
     await expect(mintTx1).to.emit(memeNFT, "Transfer")
         .withArgs('0x0000000000000000000000000000000000000000', owner.address, 1);
+    expect(await memeNFT.totalSupply()).to.equal(3);
   });
 
   it("should mint token & return NO_VOTED", async function () {
@@ -53,6 +54,7 @@ describe("MemeNFT", function () {
     await memeNFT.voteUp(1)
 
     expect(await memeNFT.getAddressTokenIdVote(owner.address, 1)).to.equal(1)
+    expect(await memeNFT.totalSupply()).to.equal(1);
   });
 
   it("should downvote", async function () {
