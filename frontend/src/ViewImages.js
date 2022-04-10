@@ -4,6 +4,8 @@ import ViewImage from "./ViewImage";
 import {ethers} from "ethers";
 import contractAddress from "./contracts/contract-address.json";
 import MemeNFTArtifact from "./contracts/MemeNFT.json";
+import {Pagination, PaginationItem} from "@mui/material";
+import {Link} from "react-router-dom";
 
 export default function ViewImages() {
     const client = new ApolloClient({
@@ -58,6 +60,8 @@ export default function ViewImages() {
     } else if (memes && memeNFT) {
         return <div>
             {memes.map(meme => <ViewImage meme={meme} key={meme.id} memeNFT={memeNFT}/>)}
+            <Pagination count={10} shape="rounded" renderItem={(item) =>(
+                <PaginationItem component={Link} to={item.page === 1 ? '' : `?page=${item.page}`} {...item}/>)}/>
         </div>
     } else {
         return <div>Loading memes ...</div>
