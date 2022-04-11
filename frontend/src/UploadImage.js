@@ -45,7 +45,7 @@ export default function UploadImage() {
     }
 
     const initialiseBundlr = async (provider) => {
-        const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider);
+        const bundlr = new WebBundlr("https://node1.bundlr.network", "boba-eth", provider);
         await bundlr.ready();
         setBundlr(bundlr);
         return bundlr;
@@ -155,7 +155,7 @@ export default function UploadImage() {
 
     if (window.ethereum === undefined) {
         return <div className={"center-warning"}>Install ethereum wallet</div>;
-    } else if (network !== "0x89") {
+    } else if (network !== "0x120") {
         return <div className={"center-warning"}>Change network to Boba</div>
     } else if (balance !== undefined && bundlr && !uploaded && memeNFT) {
         return <div className={"center"}>

@@ -55,7 +55,7 @@ export default function ViewImage({meme, memeNFT}) {
     return <div className={"padding-meme"}>
         <div className={"padding-image"}>
             <div className={"nft-id"}>
-                <a href={`https://polygonscan.com/token/0xb42b53fc8c565212830e9b69c4f7c9c5a4dff813?a=${parseInt(meme.id)}`}
+                <a href={`https://blockexplorer.boba.network/tokens/0xbcaec9c5009851a95e21d03dfa9b718d5f08e169/instance/${parseInt(meme.id)}`}
                    target="_blank">Meme NFT {parseInt(meme.id)}</a>
             </div>
             <img alt={""} src={`https://arweave.net/${meme.link}`}

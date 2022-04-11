@@ -9,9 +9,9 @@ import {Link, useParams} from "react-router-dom";
 import "./viewImages.css";
 
 export default function ViewImages() {
-    const itemsPerPage = 5;
+    const itemsPerPage = 4;
     const client = new ApolloClient({
-        uri: 'https://api.thegraph.com/subgraphs/name/wrybakiewicz/memenft',
+        uri: 'https://graph.mainnet.boba.network/subgraphs/name/wrybakiewicz/memeNFTBoba',
         cache: new InMemoryCache()
     });
 
@@ -91,7 +91,7 @@ export default function ViewImages() {
 
     if (window.ethereum === undefined) {
         return <div className={"center-warning"}>Install ethereum wallet</div>;
-    } else if (network !== "0x89") {
+    } else if (network !== "0x120") {
         return <div className={"center-warning"}>Change network to Boba</div>
     } else if (memes && memeNFT && totalItems) {
         return <div>
