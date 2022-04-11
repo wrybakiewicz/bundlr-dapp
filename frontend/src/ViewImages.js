@@ -17,6 +17,7 @@ export default function ViewImages() {
     const [memeNFT, setMemeNFT] = useState();
     const [memes, setMemes] = useState();
     const [totalItems, setTotalItems] = useState();
+    const [network, setNetwork] = useState();
 
     const params = useParams();
 
@@ -44,8 +45,14 @@ export default function ViewImages() {
         setTotalItems(totalItems.toNumber());
     }
 
-    const initializeWallet = () => {
+    const initializeWallet = async () => {
         window.ethereum.request({method: 'eth_requestAccounts'});
+        const chainId = await window.ethereum.request({method: 'eth_chainId'});
+        setNetwork(chainId)
+        window.ethereum.on("chainChanged", ([_]) => {
+            initializeEth();
+            initializeMemes();
+        });
     }
 
     const query = (page) => {
@@ -62,18 +69,27 @@ export default function ViewImages() {
             .then(result => setMemes(result.data.memeEntities));
     }
 
+    const initializeEth = () => {
+        initializeWallet().then(_ => initializeEthers()).then(memeNFT => updateTotalItems(memeNFT))
+    }
+
+    const initializeMemes = () => {
+        query(getPageNumber());
+    }
+
     useEffect(() => {
         if(!memeNFT && window.ethereum) {
-            initializeWallet()
-            initializeEthers().then(memeNFT => updateTotalItems(memeNFT))
+            initializeEth()
         }
         if (!memes) {
-            query(getPageNumber());
+            initializeMemes();
         }
     })
 
     if (window.ethereum === undefined) {
         return <h2>Install ethereum wallet</h2>;
+    } else if(network !== "0x89") {
+        return <h2>Change network to Boba</h2>
     } else if (memes && memeNFT && totalItems) {
         return <div>
             {memes.map(meme => <ViewImage meme={meme} key={meme.id} memeNFT={memeNFT}/>)}

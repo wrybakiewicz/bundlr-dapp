@@ -4,6 +4,7 @@ import {toast} from 'react-toastify';
 import {ethers} from "ethers";
 import contractAddress from "./contracts/contract-address.json";
 import MemeNFTArtifact from "./contracts/MemeNFT.json";
+import * as net from "net";
 
 export default function UploadImage() {
     const [balance, setBalance] = useState();
@@ -14,6 +15,7 @@ export default function UploadImage() {
     const [memeNFT, setMemeNFT] = useState();
     const [bundlr, setBundlr] = useState();
     const [tx, setTx] = useState();
+    const [network, setNetwork] = useState();
 
     const initializeEthers = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -26,9 +28,15 @@ export default function UploadImage() {
         return provider
     }
 
-    const initializeWallet = () => {
+    const initializeWallet = async () => {
         console.log("Initializing wallet")
-        return window.ethereum.request({method: 'eth_requestAccounts'});
+        window.ethereum.request({method: 'eth_requestAccounts'});
+        const chainId = await window.ethereum.request({method: 'eth_chainId'});
+        setNetwork(chainId)
+        window.ethereum.on("chainChanged", ([_]) => {
+            console.log("Network changed")
+            initialize()
+        });
     }
 
     const initialiseBundlr = async (provider) => {
@@ -71,7 +79,7 @@ export default function UploadImage() {
 
     const upload = async () => {
         let transaction;
-        if(transaction) {
+        if (transaction) {
             transaction = tx;
         } else {
             transaction = bundlr.createTransaction(imageData);
@@ -99,18 +107,24 @@ export default function UploadImage() {
         }
     };
 
+    const initialize = () => {
+        initializeWallet().then(_ => {
+            const provider = initializeEthers();
+            initialiseBundlr(provider).then(bundlr => updateBalance(bundlr));
+        })
+    }
+
     useEffect(() => {
-        if (!memeNFT) {
-            initializeWallet().then(_ => {
-                const provider = initializeEthers();
-                initialiseBundlr(provider).then(bundlr => updateBalance(bundlr));
-            })
+        if (!network) {
+            initialize()
         }
     })
 
 
     if (window.ethereum === undefined) {
         return <h2>Install ethereum wallet</h2>;
+    } else if (network !== "0x89") {
+        return <h2>Change network to Boba</h2>
     } else if (balance !== undefined && bundlr && !uploaded && memeNFT) {
         return <div>
             <div>Upload image:
