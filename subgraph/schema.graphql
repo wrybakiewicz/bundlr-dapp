@@ -1,5 +1,7 @@
 type MemeEntity @entity {
   id: ID!
   voteCount: BigInt!
+  voteUp: BigInt!
+  voteDown: BigInt!
   link: String!
 }
