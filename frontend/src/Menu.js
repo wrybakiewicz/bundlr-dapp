@@ -4,7 +4,7 @@ export default function Menu() {
     const location = useLocation();
 
     const showActive = (route) => {
-        if(location.pathname === route) {
+        if(location.pathname.startsWith(route)) {
             return "active"
         } else {
             return ""
