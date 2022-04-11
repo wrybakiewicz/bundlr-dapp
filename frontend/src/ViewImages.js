@@ -6,9 +6,10 @@ import contractAddress from "./contracts/contract-address.json";
 import MemeNFTArtifact from "./contracts/MemeNFT.json";
 import {Pagination, PaginationItem} from "@mui/material";
 import {Link, useParams} from "react-router-dom";
+import "./viewImages.css";
 
 export default function ViewImages() {
-    const itemsPerPage = 2;
+    const itemsPerPage = 5;
     const client = new ApolloClient({
         uri: 'https://api.thegraph.com/subgraphs/name/wrybakiewicz/memenft',
         cache: new InMemoryCache()
@@ -22,7 +23,7 @@ export default function ViewImages() {
     const params = useParams();
 
     const getPageNumber = () => {
-        if(params["*"]) {
+        if (params["*"]) {
             return parseInt(params["*"]);
         } else {
             return 1;
@@ -78,7 +79,7 @@ export default function ViewImages() {
     }
 
     useEffect(() => {
-        if(!memeNFT && window.ethereum) {
+        if (!memeNFT && window.ethereum) {
             initializeEth()
         }
         if (!memes) {
@@ -87,16 +88,25 @@ export default function ViewImages() {
     })
 
     if (window.ethereum === undefined) {
-        return <h2>Install ethereum wallet</h2>;
-    } else if(network !== "0x89") {
-        return <h2>Change network to Boba</h2>
+        return <div className={"center-warning"}>Install ethereum wallet</div>;
+    } else if (network !== "0x89") {
+        return <div className={"center-warning"}>Change network to Boba</div>
     } else if (memes && memeNFT && totalItems) {
         return <div>
-            {memes.map(meme => <ViewImage meme={meme} key={meme.id} memeNFT={memeNFT}/>)}
-            <Pagination onChange={(e, page) => query(page)} page={getPageNumber()} count={Math.round(totalItems / itemsPerPage)} shape="rounded" renderItem={(item) =>(
-                <PaginationItem component={Link} to={item.page === 1 ? '' : `/${item.page}`} {...item}/>)}/>
+            <div className={"center"}>
+                {memes.map(meme => <ViewImage meme={meme} key={meme.id} memeNFT={memeNFT}/>)}
+            </div>
+            <div>
+                <Pagination
+                    onChange={(e, page) => query(page)}
+                    page={getPageNumber()}
+                    count={Math.round(totalItems / itemsPerPage)}
+                    shape="rounded"
+                    renderItem={(item) => (
+                        <PaginationItem component={Link} to={item.page === 1 ? '' : `/${item.page}`} {...item}/>)}/>
+            </div>
         </div>
     } else {
-        return <div>Loading memes ...</div>
+        return <div></div>
     }
 }
