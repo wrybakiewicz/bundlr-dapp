@@ -64,6 +64,8 @@ export default function ViewImages() {
                               id
                               voteCount
                               link
+                              voteUp
+                              voteDown
                              }
                             }`
             })
@@ -100,7 +102,7 @@ export default function ViewImages() {
                 <Pagination
                     onChange={(e, page) => query(page)}
                     page={getPageNumber()}
-                    count={Math.round(totalItems / itemsPerPage)}
+                    count={Math.ceil((1.0 * totalItems) / itemsPerPage)}
                     shape="rounded"
                     renderItem={(item) => (
                         <PaginationItem component={Link} to={item.page === 1 ? '' : `/${item.page}`} {...item}/>)}/>
