@@ -17,3 +17,6 @@ install:
 
 deploy_matic:
 	npx hardhat deploy --network matic
+
+deploy_boba:
+	npx hardhat deploy --network boba

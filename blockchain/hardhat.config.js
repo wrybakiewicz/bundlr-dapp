@@ -27,6 +27,11 @@ module.exports = {
       url: "https://rpc-mainnet.maticvigil.com/v1/" + process.env.RPC_APP_ID,
       accounts: [process.env.MATIC_PRIVATE_KEY]
     },
+    boba: {
+      url: "https://mainnet.boba.network/",
+      chainId: 288,
+      accounts: [process.env.BOBA_PRIVATE_KEY]
+    },
   },
   settings: {
     optimizer: {

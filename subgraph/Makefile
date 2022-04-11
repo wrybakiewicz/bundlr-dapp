@@ -7,4 +7,5 @@ deploy_local:
 deploy_public:
 	yarn codegen
 	yarn build
+	yarn createGraph
 	yarn deploy

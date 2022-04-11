@@ -6,7 +6,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const {deployer} = await getNamedAccounts()
     let memeNFT;
     log("Deploying MemeNFT")
-    if (network.name === "localhost" || network.name === "matic") {
+    if (network.name === "localhost" || network.name === "matic" || network.name === "boba") {
         memeNFT = await deploy("MemeNFT", {from: deployer, log: true, args: []})
     } else {
         throw new Error("Cannot deploy MemeNFT - unsupported network")
