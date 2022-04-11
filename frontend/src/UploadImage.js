@@ -4,7 +4,10 @@ import {toast} from 'react-toastify';
 import {ethers} from "ethers";
 import contractAddress from "./contracts/contract-address.json";
 import MemeNFTArtifact from "./contracts/MemeNFT.json";
-import * as net from "net";
+import "./uploadImage.css"
+import {Button} from "@mui/material";
+import {AttachMoney, FileUpload} from "@mui/icons-material";
+import LoadingButton from '@mui/lab/LoadingButton';
 
 export default function UploadImage() {
     const [balance, setBalance] = useState();
@@ -16,6 +19,8 @@ export default function UploadImage() {
     const [bundlr, setBundlr] = useState();
     const [tx, setTx] = useState();
     const [network, setNetwork] = useState();
+    const [fundInProgress, setFundInProgress] = useState(false);
+    const [uploadInProgress, setUploadInProgress] = useState(false);
 
     const initializeEthers = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -61,6 +66,16 @@ export default function UploadImage() {
     }
 
     const fund = async () => {
+        try {
+            await fundUnsafe()
+        } catch (e) {
+            setFundInProgress(false);
+            throw e;
+        }
+    }
+
+    const fundUnsafe = async () => {
+        setFundInProgress(true);
         const tx = bundlr.createTransaction(imageData)
         setTx(tx);
         const size = tx.size
@@ -68,6 +83,7 @@ export default function UploadImage() {
         const fundStatus = await bundlr.fund(cost)
         console.log(fundStatus)
         updateBalance(bundlr)
+        setFundInProgress(false);
     }
 
     const updateCost = async (imageData) => {
@@ -78,6 +94,16 @@ export default function UploadImage() {
     }
 
     const upload = async () => {
+        try {
+            await uploadUnsafe();
+        } catch (e) {
+            setUploadInProgress(false);
+            throw e;
+        }
+    }
+
+    const uploadUnsafe = async () => {
+        setUploadInProgress(true)
         let transaction;
         if (transaction) {
             transaction = tx;
@@ -93,7 +119,13 @@ export default function UploadImage() {
             success: 'Mint transaction succeed 👌',
             error: 'Mint transaction failed 🤯'
         });
-        mintPromise.then(_ => setUploaded(true))
+        mintPromise.then(_ => {
+            setUploaded(true)
+            setUploadInProgress(false)
+        }).catch(e => {
+            setUploadInProgress(false);
+            throw e;
+        })
     }
 
     const onImageChange = async event => {
@@ -122,30 +154,59 @@ export default function UploadImage() {
 
 
     if (window.ethereum === undefined) {
-        return <h2>Install ethereum wallet</h2>;
+        return <div className={"center-warning"}>Install ethereum wallet</div>;
     } else if (network !== "0x89") {
-        return <h2>Change network to Boba</h2>
+        return <div className={"center-warning"}>Change network to Boba</div>
     } else if (balance !== undefined && bundlr && !uploaded && memeNFT) {
-        return <div>
-            <div>Upload image:
-                <input type="file" id="image" name="img" accept="image/*" onChange={onImageChange}/>
-            </div>
-            {cost > balance && image ? <div>Fund upload:
-                <button onClick={fund}>fund</button>
+        return <div className={"center"}>
+            {image ? <div></div> : <div>
+                <div className={"middle-font"}>
+                    Upload image to mint NFT
+                </div>
+                <div className={"center"}>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        endIcon={<FileUpload />}>
+                        Upload
+                        <input type="file" id="image" name="img" accept="image/*" onChange={onImageChange} hidden/>
+                    </Button>
+                </div>
+            </div>}
+            {cost > balance && image ? <div>
+                <div className={"middle-font"}>You need to fund your Bundlr account to mint an NFT</div>
+                <div className={"padding"}>
+                    {fundInProgress ? <LoadingButton loading loadingIndicator="Funding..." variant="outlined">Funding account</LoadingButton> : <Button
+                        onClick={fund}
+                        variant="contained"
+                        component="label"
+                        endIcon={<AttachMoney />}>
+                        Fund my account
+                    </Button>}
+                </div>
             </div> : <div></div>}
             {balance > cost && image ? <div>
-                Upload
-                <button onClick={upload}>upload</button>
+                <div className={"middle-font"}>Upload image to Bundlr to mint an NFT</div>
+                <div className={"padding"}>
+                    {uploadInProgress ? <LoadingButton loading loadingIndicator="Minting..." variant="outlined">Minting NFT</LoadingButton> :
+                        <Button
+                            onClick={upload}
+                            variant="contained"
+                            component="label"
+                            endIcon={<FileUpload />}>
+                            Mint meme as NFT
+                        </Button>}
+                </div>
             </div> : <div></div>}
             {image ?
                 <div>
-                    Upladed image:
-                    <img alt={""} src={image}/>
+                    <div className={"middle-font padding-bottom"}>Image to mint NFT from</div>
+                    <img className={"image"} alt={""} src={image}/>
                 </div> : <div></div>}
         </div>
     } else if (uploaded) {
-        return <div>Image uploaded</div>
+        return <div className={"center-warning"}>Your NFT was minted ! You can view it now</div>
     } else {
-        return <div>Initializing ...</div>
+        return <div className={"center-warning"}>Sign message to mint meme NFT</div>
     }
 }
