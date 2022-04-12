@@ -4,10 +4,18 @@ export default function Menu() {
     const location = useLocation();
 
     const showActive = (route) => {
-        if(location.pathname.startsWith(route)) {
-            return "active"
+        if(route === "/mint") {
+            if(location.pathname === "/mint") {
+                return "active"
+            } else {
+                return ""
+            }
         } else {
-            return ""
+            if(location.pathname !== "/mint") {
+                return "active"
+            } else {
+                return ""
+            }
         }
     }
 
