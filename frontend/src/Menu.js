@@ -1,34 +1,29 @@
 import {Link, useLocation} from "react-router-dom";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import PhoneIcon from '@mui/icons-material/Phone';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import {useState} from "react";
+import {AutoFixHigh, Search} from "@mui/icons-material";
 
 export default function Menu() {
-    const location = useLocation();
-
-    const showActive = (route) => {
-        if(route === "/mint") {
-            if(location.pathname === "/mint") {
-                return "active"
-            } else {
-                return ""
-            }
+    const getActive = () => {
+        if(location.pathname === "/mint") {
+            return 1;
         } else {
-            if(location.pathname !== "/mint") {
-                return "active"
-            } else {
-                return ""
-            }
+            return 0;
         }
     }
 
-    return <div className="row">
-        <div className="col-12">
-            <ul className="nav nav-tabs justify-content-center">
-                <li className="nav-item">
-                    <Link to={"/"} className={"nav-link " + showActive("/")}>View</Link>
-                </li>
-                <li className="nav-item">
-                    <Link to={"/mint"} className={"nav-link " + showActive("/mint")}>Mint</Link>
-                </li>
-            </ul>
-        </div>
-    </div>
+    const location = useLocation();
+    const [value, setValue] = useState(getActive());
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+    return <Tabs value={value} onChange={handleChange} aria-label="icon label tabs example" centered>
+        <Tab icon={<Search />} label="VIEW" component={Link} to="/"/>
+        <Tab icon={<AutoFixHigh />} label="MINT" component={Link} to="/mint" />
+    </Tabs>
 }
