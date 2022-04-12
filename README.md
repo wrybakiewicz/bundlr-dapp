@@ -1,6 +1,6 @@
 ## Meme NFTs
 is a project which aims to reward meme creators and their audiance. 
-It's achived by tokenizing memes as NFTs on Arweave & Boba network. Dapp create aggregated view for meme NFTs queried from smart contract.
+It's achived by tokenizing memes as NFTs on Arweave via Bundlr & Boba network. Dapp create aggregated view for meme NFTs queried from smart contract.
 
 ### Features in MVP
 Minting meme NFTs
