@@ -1,8 +1,6 @@
 import {Link, useLocation} from "react-router-dom";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import PhoneIcon from '@mui/icons-material/Phone';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useState} from "react";
 import {AutoFixHigh, Search} from "@mui/icons-material";
 

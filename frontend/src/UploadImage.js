@@ -56,7 +56,7 @@ export default function UploadImage() {
             setTimeout(async () => {
                 const balance = await bundlr.getLoadedBalance();
                 setBalance(balance.toNumber());
-                if (n < 5) {
+                if (n < 10) {
                     return execute(n + 1)
                 }
             }, 1000 * n);
@@ -80,7 +80,7 @@ export default function UploadImage() {
         setTx(tx);
         const size = tx.size
         const cost = await bundlr.getPrice(size)
-        const fundStatus = await bundlr.fund(cost)
+        const fundStatus = await bundlr.fund(cost.multipliedBy(1.05).decimalPlaces(0))
         console.log(fundStatus)
         updateBalance(bundlr)
         setFundInProgress(false);
